@@ -49,7 +49,7 @@ function Home() {
         });
       });
 
-      socket.on(SOCKET_EVENTS.ERROR, (error) => {
+      socket.on(SOCKET_EVENTS.ERROR, () => {
         setIsJoining(false);
       });
 
