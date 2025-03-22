@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 
 import { SOCKET_EVENTS } from "@/utils/enums";
-import { Bug, Position } from "@/utils/definitions";
+import { Bug, Position, Bullet } from "@/utils/definitions";
 
 export const sendHeartbeat = (
   socket: Socket,
@@ -49,4 +49,48 @@ export const sendPlayerMove = (
   }
 ) => {
   socket.emit(SOCKET_EVENTS.PLAYER_MOVE, { roomId, playerId, position });
+};
+
+export const sendFireBullet = (
+  socket: Socket,
+  {
+    roomId,
+    playerId,
+    bullet,
+  }: {
+    roomId: string;
+    playerId: string;
+    bullet: Bullet;
+  }
+) => {
+  socket.emit(SOCKET_EVENTS.FIRE_BULLET, { roomId, playerId, bullet });
+};
+
+export const sendUpdateBullets = (
+  socket: Socket,
+  {
+    roomId,
+    playerId,
+    bullets,
+  }: {
+    roomId: string;
+    playerId: string;
+    bullets: Bullet[];
+  }
+) => {
+  socket.emit(SOCKET_EVENTS.UPDATE_BULLETS, { roomId, playerId, bullets });
+};
+
+export const sendRestartGame = (
+  socket: Socket,
+  { roomId }: { roomId: string }
+) => {
+  socket.emit(SOCKET_EVENTS.RESTART_GAME, { roomId });
+};
+
+export const sendGameOver = (
+  socket: Socket,
+  { roomId }: { roomId: string }
+) => {
+  socket.emit(SOCKET_EVENTS.GAME_OVER, { roomId });
 };
