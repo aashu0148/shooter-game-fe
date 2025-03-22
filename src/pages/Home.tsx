@@ -9,6 +9,7 @@ import { useApp } from "@/contexts/app";
 
 function Home() {
   const { socket } = useApp();
+  const [isMobile, setIsMobile] = useState(false);
 
   const [playerName, setPlayerName] = useState(
     sessionStorage.getItem("playerName") || ""
@@ -61,6 +62,17 @@ function Home() {
       };
     }
   }, [socket, roomName, navigate]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleNameSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,7 +131,16 @@ function Home() {
           <p className="text-gray-400">A multiplayer shooting experience</p>
         </div>
 
-        {step === "name" ? (
+        {isMobile && (
+          <div className="mt-4 p-4 bg-red-900/50 rounded-lg">
+            <p className="text-red-200 text-center">
+              This game is only playable on desktop or laptop devices. Please
+              switch to a larger screen to play.
+            </p>
+          </div>
+        )}
+
+        {!isMobile && step === "name" ? (
           <form onSubmit={handleNameSubmit} className="mt-8 space-y-6">
             <div>
               <label
@@ -164,7 +185,7 @@ function Home() {
               Continue
             </Button>
           </form>
-        ) : (
+        ) : !isMobile ? (
           <div className="mt-8 space-y-6">
             <div>
               <label
@@ -201,7 +222,7 @@ function Home() {
               )}
             </Button>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

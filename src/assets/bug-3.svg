@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+    <!-- Body -->
+    <path d="M5 10 Q5 5, 10 5 Q15 5, 15 10 Q15 15, 10 15 Q5 15, 5 10 Z" fill="#9b59b6" />
+
+    <!-- Segments -->
+    <ellipse cx="10" cy="7" rx="4" ry="1.5" fill="#7d3c98" />
+    <ellipse cx="10" cy="10" rx="5" ry="1.5" fill="#7d3c98" />
+    <ellipse cx="10" cy="13" rx="4" ry="1.5" fill="#7d3c98" />
+
+    <!-- Eyes -->
+    <path d="M6.5 8 L8.5 9 L6.5 10 Z" fill="#ff5252" />
+    <path d="M13.5 8 L11.5 9 L13.5 10 Z" fill="#ff5252" />
+
+    <!-- Mouth -->
+    <path d="M7 12 Q10 14 13 12" fill="#5d1049" stroke="#300a27" stroke-width="0.5" />
+
+    <!-- Fangs -->
+    <path d="M8 12 L8 13.5 L9 12.5" fill="white" stroke="black" stroke-width="0.3" />
+    <path d="M12 12 L12 13.5 L11 12.5" fill="white" stroke="black" stroke-width="0.3" />
+
+    <!-- Antennae (thinner) -->
+    <path d="M8 4 C6 2, 5 3, 6 5" fill="transparent" stroke="black" stroke-width="0.4" />
+    <path d="M12 4 C14 2, 15 3, 14 5" fill="transparent" stroke="black" stroke-width="0.4" />
+
+    <!-- Spiky legs -->
+    <path d="M3 7 L6 8 L5.5 8.5" fill="transparent" stroke="black" stroke-width="0.7" />
+    <path d="M2 10 L5 10 L4.5 10.5" fill="transparent" stroke="black" stroke-width="0.7" />
+    <path d="M3 13 L6 12 L5.5 11.5" fill="transparent" stroke="black" stroke-width="0.7" />
+    <path d="M17 7 L14 8 L14.5 8.5" fill="transparent" stroke="black" stroke-width="0.7" />
+    <path d="M18 10 L15 10 L15.5 10.5" fill="transparent" stroke="black" stroke-width="0.7" />
+    <path d="M17 13 L14 12 L14.5 11.5" fill="transparent" stroke="black" stroke-width="0.7" />
+</svg>

@@ -10,10 +10,21 @@ import {
 } from "@/messages/battleground";
 import { Bug, Bullet, Position } from "@/utils/definitions";
 import { SOCKET_EVENTS } from "@/utils/enums";
+import bug1 from "@/assets/bug-1.svg";
+import bug2 from "@/assets/bug-2.svg";
+import bug3 from "@/assets/bug-3.svg";
+import bug4 from "@/assets/bug-4.svg";
+
+const bugImages: Record<number, string> = {
+  1: bug1,
+  2: bug2,
+  3: bug3,
+  4: bug4,
+};
 
 const PLAYER_SIZE = 20;
 const BULLET_SIZE = 5;
-const BUG_SIZE = 15;
+const BUG_SIZE = 20;
 const PLAYER_SPEED = 5;
 const BULLET_SPEED = 7;
 const BUG_SPEED = 2;
@@ -32,6 +43,7 @@ function Battleground() {
   const keysRef = useRef<Set<string>>(new Set());
   const lastShootTime = useRef<number>(0);
   const otherPlayersRef = useRef<Map<string, Position>>(new Map());
+  const bugImageRefs = useRef<Record<number, HTMLImageElement>>({});
 
   useEffect(() => {
     if (!room?.players || !player) return;
@@ -113,6 +125,15 @@ function Battleground() {
       clearInterval(heartbeatInterval);
     };
   }, [socket, room?.id, player]);
+
+  useEffect(() => {
+    // Preload images
+    Object.entries(bugImages).forEach(([level, src]) => {
+      const img = new Image();
+      img.src = src;
+      bugImageRefs.current[Number(level)] = img;
+    });
+  }, []);
 
   // Keyboard event listeners
   useEffect(() => {
@@ -317,19 +338,22 @@ function Battleground() {
       // Draw bugs
       bugsRef.current.forEach((bug) => {
         if (!bug.active) return;
-        ctx.beginPath();
-        ctx.arc(bug.x, bug.y, BUG_SIZE, 0, Math.PI * 2);
+        const bugImg = bugImageRefs.current[bug.level];
+        if (bugImg) {
+          ctx.drawImage(
+            bugImg,
+            bug.x - BUG_SIZE, // Center the image
+            bug.y - BUG_SIZE,
+            BUG_SIZE * 2, // Make the image twice the size of the original collision circle
+            BUG_SIZE * 2
+          );
 
-        // Darker red for higher levels
-        const colorIntensity = Math.max(0, 255 - (bug.level - 1) * 50);
-        ctx.fillStyle = `rgb(${colorIntensity}, 0, 0)`;
-        ctx.fill();
-
-        // Optional: Draw health indicator
-        ctx.font = "12px Arial";
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.fillText(bug.health.toString(), bug.x, bug.y);
+          // Health indicator
+          ctx.font = "12px Arial";
+          ctx.fillStyle = "white";
+          ctx.textAlign = "center";
+          ctx.fillText(bug.health.toString(), bug.x, bug.y - BUG_SIZE - 5);
+        }
       });
 
       requestAnimationFrame(renderLoop);
@@ -344,10 +368,10 @@ function Battleground() {
   }, [socket, room, player]);
 
   return (
-    <div className="w-full h-screen bg-gray-900 flex items-center justify-center">
+    <div className="w-full h-full bg-gray-900 flex items-center justify-center">
       <canvas
         ref={canvasRef}
-        width={1000}
+        width={800}
         height={600}
         className="border border-white"
       />
