@@ -5,7 +5,6 @@ import { useGame } from "@/contexts/game";
 import { SOCKET_EVENTS } from "@/utils/enums";
 import { Button } from "@/components/ui/button";
 import { sendRestartGame } from "@/messages/battleground";
-import { Room } from "@/utils/definitions";
 
 function RightSidebar() {
   const { socket } = useApp();
@@ -25,8 +24,8 @@ function RightSidebar() {
     if (!socket) return;
 
     // Listen for player joined events
-    const handleBugKilled = (data: { room: Room }) => {
-      const score = data?.room?.score;
+    const handleBugKilled = (data: { score: number }) => {
+      const score = data?.score;
 
       if (score > highestScore.current) {
         highestScore.current = score;
