@@ -8,7 +8,6 @@ import {
   sendUpdateBugHealth,
   sendPlayerMove,
   sendFireBullet,
-  sendUpdateBullets,
   sendGameOver,
 } from "@/messages/battleground";
 import { Bug, Bullet, Position, Room } from "@/utils/definitions";
@@ -77,7 +76,7 @@ function Battleground() {
     }, 30000);
 
     // Listen for new bugs added by other players
-    const handleBugAdded = ({ bug }: { bug: Bug }) => {
+    const handleBugAdded = ({ bug }: { bugId: string; bug: Bug }) => {
       bugsRef.current = [...bugsRef.current, bug];
     };
 
@@ -102,10 +101,6 @@ function Battleground() {
       });
     };
 
-    socket.on(SOCKET_EVENTS.BUG_ADDED, handleBugAdded);
-    socket.on(SOCKET_EVENTS.BUG_KILLED, handleBugKilled);
-    socket.on(SOCKET_EVENTS.BUG_HEALTH_UPDATED, handleBugHealthUpdated);
-
     // Listen for other players' movements
     const handlePlayerMoved = ({
       playerId,
@@ -118,8 +113,6 @@ function Battleground() {
         otherPlayersRef.current.set(playerId, position);
       }
     };
-
-    socket.on(SOCKET_EVENTS.PLAYER_MOVED, handlePlayerMoved);
 
     // Listen for bullets fired by other players
     const handleBulletFired = ({
@@ -139,27 +132,11 @@ function Battleground() {
       }
     };
 
-    // Listen for bullet updates from other players - only check for removed bullets
-    // const handleBulletsUpdated = ({
-    //   playerId,
-    //   bullets,
-    // }: {
-    //   playerId: string;
-    //   bullets: Bullet[];
-    // }) => {
-    //   if (playerId !== player.id) {
-    //     const currentBullets =
-    //       otherPlayersBulletsRef.current.get(playerId) || [];
-    //     // Only remove bullets that no longer exist in the update
-    //     const updatedBullets = currentBullets.filter((bullet) =>
-    //       bullets.some((updatedBullet) => updatedBullet.id === bullet.id)
-    //     );
-    //     otherPlayersBulletsRef.current.set(playerId, updatedBullets);
-    //   }
-    // };
-
+    socket.on(SOCKET_EVENTS.BUG_ADDED, handleBugAdded);
+    socket.on(SOCKET_EVENTS.BUG_KILLED, handleBugKilled);
+    socket.on(SOCKET_EVENTS.BUG_HEALTH_UPDATED, handleBugHealthUpdated);
+    socket.on(SOCKET_EVENTS.PLAYER_MOVED, handlePlayerMoved);
     socket.on(SOCKET_EVENTS.BULLET_FIRED, handleBulletFired);
-    // socket.on(SOCKET_EVENTS.BULLETS_UPDATED, handleBulletsUpdated);
 
     const handleGameRestarted = (data: { room: Room }) => {
       setRoom(data.room);
@@ -176,7 +153,6 @@ function Battleground() {
       socket.off(SOCKET_EVENTS.PLAYER_MOVED, handlePlayerMoved);
       socket.off(SOCKET_EVENTS.BULLET_FIRED, handleBulletFired);
       socket.off(SOCKET_EVENTS.GAME_RESTARTED, handleGameRestarted);
-      // socket.off(SOCKET_EVENTS.BULLETS_UPDATED, handleBulletsUpdated);
       clearInterval(heartbeatInterval);
     };
   }, [socket, room?.id, player]);
@@ -312,11 +288,11 @@ function Battleground() {
             });
 
             // Only send the bullet IDs that are still active
-            sendUpdateBullets(socket, {
-              roomId: room.id,
-              playerId: player.id,
-              bullets: bulletsRef.current,
-            });
+            // sendUpdateBullets(socket, {
+            //   roomId: room.id,
+            //   playerId: player.id,
+            //   bullets: bulletsRef.current,
+            // });
 
             // Move bugs and check for wall collision
             bugsRef.current = bugsRef.current
