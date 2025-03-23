@@ -209,7 +209,7 @@ function Battleground() {
 
             // Emit the new bug to all players
             sendAddBug(socket, { roomId: room.id, bug });
-          }, 1200)
+          }, 1400)
         : null;
 
     // Main game loop - only run if game is not over
